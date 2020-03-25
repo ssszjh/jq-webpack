@@ -1,5 +1,8 @@
 # jq-webpack
 多页面（jq）项目用webpack打包
+运行npm run server
+打包npm run build
+
 1.创建json，npm int
 
 2.引入的依赖用cnpm install xx --save-dev或者npm install xx --save-dev
