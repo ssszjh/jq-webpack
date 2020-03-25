@@ -62,6 +62,7 @@ output: {
  
 6.本地服务器
 
+
  devServer: {
  
         contentBase: "./dist", //本地服务器所加载的页面所在的目录
@@ -115,7 +116,9 @@ output: {
  
         new webpack.BannerPlugin('版权所有，翻版必究'),
         new CleanWebpackPlugin(),//清理上次打包的文件
+        
 　　//html模板（待优化）
+  
     //    new htmlPlugin({
        //     filename: 'index.html',
       //      minify: { //对html文件进行压缩
@@ -139,13 +142,16 @@ output: {
     optimization: {
     
         minimizer: [
+  
 　　//压缩js
+  
             new UglifyJsPlugin({
                 cache: true,
                 parallel: true,
                 sourceMap: true // set to true if you want JS source maps
             }),
 //压缩css
+
             new OptimizeCSSAssetsPlugin({})
         ]
     }
@@ -173,7 +179,9 @@ configReq.htmlConfig.forEach((val, i) => {
 
 const webpack = require('webpack');
 
+
 //入口配置 
+
 var entry = {
 
         index1: './src/js/index1.js',
@@ -195,12 +203,19 @@ module.exports = {
     htmlConfig: htmlConfig
 }
 //引入配置
+
 var configReq = require('./config.js'); //读取配置
+
+
 module.exports = config;//config为webpack配置文件
  
+ 
 //还剩公共的方法的处理
+
 //注：这里公共并不是编译前的公共代码，而是指多入口里公共的代码提出出来
+
 处理公共的方法，用webpack+自带的splitChunks与minimizer同级
+
   //打包公共模块
         splitChunks: {
         
@@ -214,8 +229,11 @@ module.exports = config;//config为webpack配置文件
             }
         }
 //还要在html模板里的chunks改成
+
  chunks: [val.name, "commons"],
+ 
 //引入jq
+
 先安装加载器expose-loader，用于将插件暴露到全局中供其他模块使用:
 
 npm i expose-loader --save-dev
