@@ -1,18 +1,23 @@
 import '../css/index.css';
 import '../common/common.css';
-import   '../common/swiper.min.css';
+import '../common/swiper.min.css';
 import 'expose-loader?$!jquery';
-import Swiper from '../common/swiper.min.js';
 import '../common/common.js';
+import Swiper from '../common/swiper.min.js';
+
 
 
 
 console.log('主页面');
-$('.main').click(function(){
-    window.location.href='index1.html';
+$('.main').click(function() {
+    window.location.href = 'index1.html';
 })
+const a = 1;
+console.log(a);
 // swiper加载
-new Swiper('.swiper1', {
+
+// var swiper1 = new Swiper('.swiper1');
+var swiper = new Swiper('.swiper1', {
     loop: true, // 循环模式选项
     autoplay: {
         delay: 3000,

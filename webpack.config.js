@@ -35,6 +35,12 @@ var config = {
     },
     module: {
         rules: [
+            //处理es6
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
             //对js里引入css，提取到js里
             {
                 test: /\.(css)$/,
