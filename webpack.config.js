@@ -14,17 +14,24 @@ var config = {
     output: {
         filename: 'js/[name]-[hash].js',
         path: __dirname + '/dist',
-    },
-    resolve:{
-        alias:{
-            swiper:path.resolve(__dirname,"src/common/swiper.min.js")
-        }
+        publicPath: '/'
     },
     devServer: {
         contentBase: "./dist", //本地服务器所加载的页面所在的目录
         port: "8080", //设置默认监听端口，如果省略，默认为"8080"
         inline: true, //实时刷新
-        historyApiFallback: true //不跳转
+        historyApiFallback: true, //不跳转
+        proxy: {
+            //把/api/t转发到target，但是转发的是http://xxx/api/t
+            //不要/api,用pathRewrite
+            '/api': {
+                target: 'http://xxx',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        }
     },
     module: {
         rules: [
@@ -71,7 +78,7 @@ var config = {
             }),
             new OptimizeCSSAssetsPlugin({})
         ],
-         //打包公共模块
+        //打包公共模块
         splitChunks: {
             cacheGroups: {
                 commons: {

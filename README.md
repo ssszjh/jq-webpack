@@ -6,6 +6,8 @@
 打包npm run build
 
 
+
+
 1.创建json，npm int
 
 2.引入的依赖用cnpm install xx --save-dev
@@ -57,6 +59,9 @@ entry: configReq.entry,
 output: {
         filename: 'js/[name]-[hash].js',
         path: __dirname + '/dist',
+        //防止css里图片找不到路径
+ 　　publicPath: '/'
+    },
     },
  
  
@@ -71,7 +76,28 @@ output: {
         
         inline: true, //实时刷新
         
-        historyApiFallback: true //不跳转
+        historyApiFallback: true, //不跳转
+        //代理转发接口
+        
+proxy: {
+            //把/api/t转发到target，但是转发的是xxx
+
+            //不要/api,用pathRewrite
+
+            '/api': {
+
+                target: 'xxx',
+
+                changeOrigin: true,
+
+                pathRewrite: {
+
+                    '^/api': ''
+
+                }
+            }
+        }
+    },
     },
  
  
