@@ -5,6 +5,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin'); //分离css从
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); //压缩css
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //清除打包的
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); //压缩js
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 var configReq = require('./config.js'); //读取配置
 
 
@@ -13,21 +14,38 @@ var config = {
     entry: configReq.entry,
     output: {
         filename: 'js/[name]-[hash].js',
-        path: __dirname + '/dist',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
-    resolve:{
-        alias:{
-            swiper:path.resolve(__dirname,"src/common/swiper.min.js")
-        }
+    externals: {
+        jquery: "jQuery"
     },
     devServer: {
         contentBase: "./dist", //本地服务器所加载的页面所在的目录
-        port: "8080", //设置默认监听端口，如果省略，默认为"8080"
+        port: "8088", //设置默认监听端口，如果省略，默认为"8080"
         inline: true, //实时刷新
-        historyApiFallback: true //不跳转
+        historyApiFallback: true, //不跳转
+        //代理转发接口
+        proxy: {
+        //把/api/t转发到target，但是转发的是http://xxx/api/t
+        //不要/api,用pathRewrite
+            '/api': {
+                target: 'xxx',//(跨域的地址)
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        }
     },
     module: {
         rules: [
+             //处理es6
+             {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
             //对js里引入css，提取到js里
             {
                 test: /\.(css)$/,
@@ -40,11 +58,10 @@ var config = {
             },
             //压缩图片
             {
-                test: /\.(png|jpg|gif|jpeg)/, //是匹配图片文件后缀名
+                test: /\.(png|svg|jpg|gif)$/,
                 use: [{
-                    loader: 'url-loader', //指定使用的loader和loader的配置参数
+                    loader:'file-loader',
                     options: {
-                        limit: 5 * 1024, //是把小于5KB的文件打成Base64的格式，写入JS
                         outputPath: './image/' //打包后的图片放到img文件夹下
                     }
                 }]
@@ -53,6 +70,30 @@ var config = {
             {
                 test: /\.(htm|html)$/i,
                 use: ['html-withimg-loader']
+            },
+            //处理字体  <br>
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [{
+                    loader:'file-loader',
+                    options: {
+                        outputPath: './font/' //打包后的图片放到img文件夹下
+                    }
+                }]
+            },
+            {
+                //jquery.js的路径
+                test: require.resolve('./src/common/jquery-3.4.1.min.js'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                }, {
+                    loader: 'expose-loader',
+                    options: '$'
+                }, {
+                    loader: 'expose-loader',
+                    options: 'jquery'
+                }]
             }
         ]
     },
