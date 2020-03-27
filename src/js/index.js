@@ -47,8 +47,12 @@ console.log('主页面');
 $('.main').click(function () {
     window.location.href = 'index1.html';
 })
+const a = 1;
+console.log(a);
 // swiper加载
-new Swiper('.swiper1', {
+
+// var swiper1 = new Swiper('.swiper1');
+var swiper = new Swiper('.swiper1', {
     loop: true, // 循环模式选项
     autoplay: {
         delay: 3000,

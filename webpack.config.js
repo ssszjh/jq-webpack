@@ -112,7 +112,7 @@ var config = {
             }),
             new OptimizeCSSAssetsPlugin({})
         ],
-         //打包公共模块
+        //打包公共模块
         splitChunks: {
             cacheGroups: {
                 commons: {
