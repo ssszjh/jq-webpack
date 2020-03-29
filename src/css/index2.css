@@ -1,3 +1,9 @@
 div {
     color: red;
 }
+.img {
+    background: url(../image/swiper/3.jpg) no-repeat;
+    width: 500px;
+    height: 200px;
+    background-size: contain;
+}

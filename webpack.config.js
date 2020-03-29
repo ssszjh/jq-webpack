@@ -5,9 +5,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin'); //分离css从
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); //压缩css
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //清除打包的
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); //压缩js
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 var configReq = require('./config.js'); //读取配置
-
 
 var config = {
     mode: 'production',
@@ -15,7 +13,8 @@ var config = {
     output: {
         filename: 'js/[name]-[hash].js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/'
+        // publicPath: './'
+        //publicPath: '/'
     },
     externals: {
         jquery: "jQuery"
@@ -50,7 +49,11 @@ var config = {
             {
                 test: /\.(css)$/,
                 use: extractTextPlugin.extract({
-                    fallback: "style-loader",
+                    fallback: [{
+                        loader:"style-loader",
+                        
+                    }],
+                    publicPath: '../',//设置css的图片路径
                     use: [{
                         loader: "css-loader",
                     }, ]
@@ -100,8 +103,7 @@ var config = {
     plugins: [
         new webpack.BannerPlugin('版权所有，翻版必究'),
         new CleanWebpackPlugin(),
-        new extractTextPlugin("css/[name]-[hash].css"), //提取CSS行内样式，转化为link引入
-
+       new extractTextPlugin("css/[name]-[hash].css"), //提取CSS行内样式，转化为link引入
     ],
     optimization: {
         minimizer: [
