@@ -4,3 +4,5 @@
 # 运行npm run server
 # 打包npm run build
 
+# 若要promise，在该页面引用
+# import "babel-polyfill"; //解决低版本浏览器，不识别promise问题
