@@ -11,7 +11,7 @@ var config = {
     entry: configReq.entry,
     output: {
         filename: 'js/[name]-[hash].js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../dist'),
         // publicPath: './'
         //publicPath: '/'
     },
