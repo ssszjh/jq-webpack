@@ -1,4 +1,7 @@
 div {
-    color: yellow;
-    font-size: 26px;
+    /* color: yellow; */
+    /* font-size: 26px; */
+}
+* {
+    box-sizing: content-box;
 }

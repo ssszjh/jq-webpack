@@ -1,5 +1,5 @@
 import '../css/index.css';
-import {test,Swiper} from '../common/common.js';
+import {test} from '../common/common.js';
 
 
 

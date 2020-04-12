@@ -6,7 +6,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin'); //分离css从
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //清除打包的
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); //压缩js
 var configReq = require('./config.js'); //读取配置
-
+const CopyWebpackPlugin=require('copy-webpack-plugin');
 var config = {
     entry: configReq.entry,
     output: {
@@ -56,35 +56,39 @@ var config = {
                 use: ['html-withimg-loader']
             },
             //处理字体  <br>
-            {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        outputPath: './font/' //打包后的图片放到img文件夹下
-                    }
-                }]
-            },
-            {
-                //jquery.js的路径
-                test: require.resolve('../src/common/jquery-3.4.1.min.js'),
-                use: [{
-                    loader: 'expose-loader',
-                    options: 'jQuery'
-                }, {
-                    loader: 'expose-loader',
-                    options: '$'
-                }, {
-                    loader: 'expose-loader',
-                    options: 'jquery'
-                }]
-            }
+            // {
+            //     test: /\.(woff|woff2|eot|ttf|otf)$/,
+            //     use: [{
+            //         loader: 'file-loader',
+            //         options: {
+            //             outputPath: './font/' //打包后的图片放到img文件夹下
+            //         }
+            //     }]
+            // },
+            // {
+            //     //jquery.js的路径
+            //     test: require.resolve('../src/assets/jquery-3.4.1.min.js'),
+            //     use: [{
+            //         loader: 'expose-loader',
+            //         options: 'jQuery'
+            //     }, {
+            //         loader: 'expose-loader',
+            //         options: '$'
+            //     }, {
+            //         loader: 'expose-loader',
+            //         options: 'jquery'
+            //     }]
+            // }
         ]
     },
     plugins: [
         new webpack.BannerPlugin('版权所有，翻版必究'),
         new CleanWebpackPlugin(),
         new extractTextPlugin("css/[name]-[hash].css"), //提取CSS行内样式，转化为link引入
+        new CopyWebpackPlugin([{
+               from:path.resolve(__dirname, '../src/assets'),
+               to:'./assets'
+           }])
     ],
     optimization: {
         minimizer: [],
