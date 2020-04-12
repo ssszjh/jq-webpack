@@ -1,0 +1,16 @@
+
+
+$primary-color: #1890ff;
+
+.main{
+  height: 47px;
+  line-height: 47px;
+  text-align: center;
+//   font-size: 18px;
+  cursor: pointer;
+
+  &:hover{
+    color: $primary-color;
+    background-color: tint($primary-color, 50%);
+  }
+}

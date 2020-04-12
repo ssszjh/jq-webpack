@@ -28,7 +28,7 @@ var config = {
             },
             //对js里引入css，提取到js里
             {
-                test: /\.(css)$/,
+                test: /\.(css|scss|sass)$/,
                 use: extractTextPlugin.extract({
                     fallback: [{
                         loader: "style-loader",
@@ -37,7 +37,9 @@ var config = {
                     publicPath: '../', //设置css的图片路径
                     use: [{
                         loader: "css-loader",
-                    }, ]
+                    }, {
+                        loader: "sass-loader",
+                    },]
                 })
             },
             //压缩图片
