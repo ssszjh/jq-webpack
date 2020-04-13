@@ -6,7 +6,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin'); //分离css从
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //清除打包的
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); //压缩js
 var configReq = require('./config.js'); //读取配置
-const CopyWebpackPlugin=require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 var config = {
     entry: configReq.entry,
     output: {
@@ -15,9 +15,9 @@ var config = {
         // publicPath: './'
         //publicPath: '/'
     },
-    externals: {
-        jquery: "jQuery"
-    },
+    // externals: {
+    //     jquery: "jQuery"
+    // },
     module: {
         rules: [
             //处理es6
@@ -39,7 +39,7 @@ var config = {
                         loader: "css-loader",
                     }, {
                         loader: "sass-loader",
-                    },]
+                    }, ]
                 })
             },
             //压缩图片
@@ -88,9 +88,9 @@ var config = {
         new CleanWebpackPlugin(),
         new extractTextPlugin("css/[name]-[hash].css"), //提取CSS行内样式，转化为link引入
         new CopyWebpackPlugin([{
-               from:path.resolve(__dirname, '../src/assets'),
-               to:'./assets'
-           }])
+            from: path.resolve(__dirname, '../src/assets'),
+            to: './assets'
+        }])
     ],
     optimization: {
         minimizer: [],
