@@ -19,7 +19,8 @@ module.exports = merge(base, {
             //不要/api,用pathRewrite
             '/api': {
                 target: 'xxx', //(跨域的地址)
-                changeOrigin: true,
+                changeOrigin: true, // target是域名的话，需要这个参数，
+                secure: false, // 设置支持https协议的代理
                 pathRewrite: {
                     '^/api': ''
                 }

@@ -2,44 +2,34 @@ const webpack = require('webpack');
 const path = require('path');
 const htmlPlugin = require('html-webpack-plugin'); //生成html模板
 const extractTextPlugin = require('extract-text-webpack-plugin'); //分离css从js里
-// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); //压缩css
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //清除打包的
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); //压缩js
 var configReq = require('./config.js'); //读取配置
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HappyPack = require('happypack'); // 多线程打包
+const os = require('os');
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+
 var config = {
     entry: configReq.entry,
     output: {
         filename: 'js/[name]-[hash].js',
         path: path.resolve(__dirname, '../dist'),
-        // publicPath: './'
-        //publicPath: '/'
     },
-    // externals: {
-    //     jquery: "jQuery"
-    // },
     module: {
         rules: [
             //处理es6
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel-loader"
+                loader: 'happypack/loader?id=happyBabel',
             },
             //对js里引入css，提取到js里
             {
                 test: /\.(css|scss|sass)$/,
                 use: extractTextPlugin.extract({
-                    fallback: [{
-                        loader: "style-loader",
-
-                    }],
+                    fallback: "style-loader", //编译后用什么loader来提取css文件
                     publicPath: '../', //设置css的图片路径
-                    use: [{
-                        loader: "css-loader",
-                    }, {
-                        loader: "sass-loader",
-                    }, ]
+                    use: ["css-loader", "sass-loader"]
                 })
             },
             //压缩图片
@@ -53,34 +43,11 @@ var config = {
                 }]
             },
             //打包html的图片
+            //html中直接使用img标签src加载图片的话，因为没有被依赖，图片将不会被打包。这个loader将解决这个问题
             {
                 test: /\.(htm|html)$/i,
                 use: ['html-withimg-loader']
             },
-            //处理字体  <br>
-            // {
-            //     test: /\.(woff|woff2|eot|ttf|otf)$/,
-            //     use: [{
-            //         loader: 'file-loader',
-            //         options: {
-            //             outputPath: './font/' //打包后的图片放到img文件夹下
-            //         }
-            //     }]
-            // },
-            // {
-            //     //jquery.js的路径
-            //     test: require.resolve('../src/assets/jquery-3.4.1.min.js'),
-            //     use: [{
-            //         loader: 'expose-loader',
-            //         options: 'jQuery'
-            //     }, {
-            //         loader: 'expose-loader',
-            //         options: '$'
-            //     }, {
-            //         loader: 'expose-loader',
-            //         options: 'jquery'
-            //     }]
-            // }
         ]
     },
     plugins: [
@@ -90,7 +57,19 @@ var config = {
         new CopyWebpackPlugin([{
             from: path.resolve(__dirname, '../src/assets'),
             to: './assets'
-        }])
+        }]),
+        new HappyPack({
+            //用id来标识 happypack处理那里类文件
+            id: 'happyBabel',
+            //如何处理  用法和loader 的配置一样
+            loaders: [{
+                loader: 'babel-loader?cacheDirectory=true',
+            }],
+            //共享进程池
+            threadPool: happyThreadPool,
+            //允许 HappyPack 输出日志
+            verbose: true,
+        }),
     ],
     optimization: {
         minimizer: [],
@@ -99,7 +78,7 @@ var config = {
             cacheGroups: {
                 commons: {
                     chunks: 'initial', //initial表示提取入口文件的公共部分
-                    minChunks: 2, //表示提取公共部分最少的文件数
+                    minChunks: 20, //表示提取公共部分最少的文件数
                     minSize: 0, //表示提取公共部分最小的大小
                     name: 'commons' //提取出来的文件命名
                 }
